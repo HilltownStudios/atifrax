@@ -1,0 +1,82 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xl: <http://www.w3.org/2008/05/skos-xl#> .
+@predix atifrax: <http://uri.tbd/atifrax#> .
+
+#####
+# This schema formalizes a set of semantic conditions sufficient to model 
+# artifacts for use and/or reuse in RPGs. 
+#####
+
+
+# Ontology
+
+atifrax: a owl:Ontology ;
+  dct:title "atifrax schema"@en ;
+  dct:description "A schema for modeling artifacts for use and/or reuse in RPGs." .
+
+
+# OWL Classes
+
+atifrax:Fractus a owl:Class ;
+  rdfs:label "Fractus"@en ;
+  skos:definition "A collection of Artifact instances collected under one designation."@en ;
+  skos:scopeNote "A fractus may be defined to include artifcats from different sources."@en ;
+  owl:disjointWith atifrax:Artifact .
+
+atifrax:Artifact a owl:Class ;
+  rdfs:label "Artifact"@en ;
+  skos:definition "A collection of Mechanics, Flavors, and Artworks. Each Artifact is a compound class."@en ;
+  skos:scopeNote "An artifact may be defined to include mechanics, flavors, and artworks from different sources. Each will be attributed and licensed appropriately."@en ;
+  owl:disjointWith atifrax:Fractus .
+
+atifrax:Constituent a owl:Class ;
+  rdfs:label "Constituent"@en ;
+  skos:definition "Superclass of components that can be included with an artifact."@en ;
+  skos:scopeNote "This class is not intended to be used directly, but as a superclass for all classes that an artifact may include."@en ;
+  owl:disjointWith atifrax:Artifact , atifrax:Fractus .
+
+atifrax:Mechanic a owl:Class ;
+  rdfs:label "Mechanic"@en ;
+  skos:definition "Superclass of all materials involving game rules, parameters, and specifications that are mechanical or computational in nature."@en ;
+  skos:scopeNote "Mechanics must be defined as granularly as possible, preferably comprising only a single rule or computation."@en ;
+  rdfs:subClassOf atifrax:ArtifactConstituent ;
+  owl:disjointWith atifrax:Flavor , atifrax:Artwork .
+
+atifrax:Flavor a owl:Class ;
+  rdfs:label "Flavor"@en ;
+  skos:definition "Superclass of all materials involving descriptive text that are not mechanical or computational in nature and are not otherwise artworks. Examples include setting descriptions, names of cities, etc."@en ;
+  skos:scopeNote "Flavors MUST NOT be defined to impose rules or mechanics." ;
+  rdfs:subClassOf atifrax:ArtifactConstituent ;
+  owl:disjointWith atifrax:Mechanic , atifrax:Artwork .
+
+atifrax:Artwork a owl:Class ;
+  rdfs:label "Artwork"@en ;
+  skos:definition "Superclass of all materials involving primarily artistic works distinct from flavor text and not mechanical or computational in nature."
+  skos:scopeNote "Artworks MUST NOT be defined to impose rules or mechanics." ;
+  rdfs:subClassOf atifrax:ArtifactConstituent ;
+  owl:disjointWith atifrax:Mechanic , atifrax:Flavor .
+
+
+# DatatypeProperties
+# TO DO: define data properties; 
+
+# ObjectProperties
+
+atifrax:hasArtifact a rdfs:Property , owl:ObjectProperty ;
+  rdfs:label "has artifact"@en ;
+  skos:definition "Relates a fractus to constituent artifacts."@en ;
+  rdfs:comment "Generally speaking, artifacts do not assert their inclusion in a fractus; it is up to the fractus to declare its constituent parts."@en ;
+  rdfs:domain atifrax:Fractus ;
+  rdfs:range atifrax:Artifact .
+
+atifrax:hasConstituent a rdfs:Property , owl:ObjectProperty ;
+  rdfs:label "has constituent"@en ;
+  skos:definition "Relates an artifact to its constituent parts."@en ;
+  rdfs:comment "Generally, constituents do not assert their inclusion in an artifact; it is up to the artifact to declare its constituent parts."@en ;
+  rdfs:domain atifrax:Artifact ;
+  rdfs:range atifrax:Constituent .
